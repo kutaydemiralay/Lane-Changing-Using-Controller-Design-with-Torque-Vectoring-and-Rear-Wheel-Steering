@@ -113,6 +113,70 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 \end{aligned}
 \]
 
+## 🧠 Extensions: Torque Vectoring & Rear-Wheel Steering
+
+To enhance the vehicle’s lateral control authority and stability, we integrate:
+
+### ⚙️ Torque Vectoring (TV)
+
+**Concept:**
+Torque vectoring modulates the torque difference between left and right wheels (especially rear wheels) to generate a **yaw moment** without steering input. It effectively assists in cornering and stabilization, especially at high speeds.
+
+**Modeling:**
+We augment the yaw dynamics with a control input \( u_{tv} \) that directly contributes to the yaw moment:
+\[
+\dot{r} = \frac{1}{I_z} (a F_{yf} - b F_{yr}) + \frac{1}{I_z} u_{tv}
+\]
+
+In the linearized discrete model:
+\[
+r[k+1] = r[k] + \Delta t (A_{21} v_y[k] + A_{22} r[k] + B_2 \delta[k] + B_{tv} u_{tv}[k])
+\]
+
+where:
+- \( B_{tv} = \frac{1}{I_z} \)
+- \( u_{tv} \) is an additional optimization variable representing the yaw moment from torque vectoring
+
+A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost function to penalize unnecessary torque usage.
+
+### 🔄 Rear-Wheel Steering (RWS)
+
+**Concept:**
+Rear wheels are allowed to steer with angle \( \delta_r \), improving agility at low speeds and stability at high speeds. The rear slip angle becomes:
+\[
+\alpha_r = \delta_r - \frac{v_y - b r}{v_x}
+\]
+
+**Modeling:**
+We now have two steering inputs:
+- \( \delta_f \): front steering angle
+- \( \delta_r \): rear steering angle
+
+Both contribute to lateral forces:
+\[
+\begin{aligned}
+F_{yf} &= -C_f \left( \delta_f - \frac{v_y + a r}{v_x} \right) \\
+F_{yr} &= -C_r \left( \delta_r - \frac{v_y - b r}{v_x} \right)
+\end{aligned}
+\]
+
+Linearized yaw dynamics now becomes:
+\[
+\dot{r} = \frac{1}{I_z} (a F_{yf} - b F_{yr})
+\]
+\[
+\Rightarrow r[k+1] = r[k] + \Delta t (A_{21} v_y[k] + A_{22} r[k] + B_{2f} \delta_f[k] + B_{2r} \delta_r[k])
+\]
+
+with:
+- \( B_{2f} = \frac{2 C_f a}{I_z} \)
+- \( B_{2r} = -\frac{2 C_r b}{I_z} \)
+
+The cost function is extended with a penalty on \( \delta_r \) to avoid excessive rear steering:
+\[
+J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\delta_r} \cdot \delta_r^2 \right)
+\]
+
 ---
 
 ## 📈 Project Overview
@@ -130,10 +194,5 @@ pip install numpy matplotlib cvxpy
 ```
 
 ---
-
-Let me know if you'd like to:
-- Add the nonlinear model too
-- Extend to rear-wheel steering or torque vectoring
-- Simulate with actual sensor noise or track curvature
 
 
