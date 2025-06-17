@@ -8,7 +8,7 @@ This repository demonstrates a simple lane change and hold maneuver using **Mode
 
 ---
 
-## 🚗 Vehicle Model and Dynamics
+##  Vehicle Model and Dynamics
 
 We use a **linearized bicycle model** (4-wheel simplification) assuming constant longitudinal velocity \(v_x = v_{\text{long}}\). The actual vehicle has 4 wheels, but for simplicity, we merge:
 - The left and right **front tires** into a single equivalent front wheel.
@@ -16,7 +16,7 @@ We use a **linearized bicycle model** (4-wheel simplification) assuming constant
 
 This results in a 2-wheel bicycle model.
 
-### 📐 Assumptions in Bicycle Model
+###  Assumptions in Bicycle Model
 
 1. **Symmetric vehicle:**
    - Identical left/right tires
@@ -44,7 +44,7 @@ This results in a 2-wheel bicycle model.
 
 ---
 
-### 📘 Continuous-Time Dynamics (Before Linearization)
+### Continuous-Time Dynamics (Before Linearization)
 
 State vector:
 \[
@@ -82,7 +82,7 @@ These are **nonlinear** due to \(v_x\) in the denominators and the product terms
 
 ---
 
-## 🔢 Linearized Discrete-Time Dynamics (Used in MPC)
+##  Linearized Discrete-Time Dynamics (Used in MPC)
 
 After linearizing around \(v_y = 0, r = 0, \delta = 0\), and assuming constant speed \(v_x\), we obtain:
 
@@ -113,11 +113,11 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 \end{aligned}
 \]
 
-## 🧠 Extensions: Torque Vectoring & Rear-Wheel Steering
+##  Extensions: Torque Vectoring & Rear-Wheel Steering
 
 To enhance the vehicle’s lateral control authority and stability, we integrate:
 
-### ⚙️ Torque Vectoring (TV)
+### ⚙ Torque Vectoring (TV)
 
 **Concept:**
 Torque vectoring modulates the torque difference between left and right wheels (especially rear wheels) to generate a **yaw moment** without steering input. It effectively assists in cornering and stabilization, especially at high speeds.
@@ -139,7 +139,7 @@ where:
 
 A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost function to penalize unnecessary torque usage.
 
-### 🔄 Rear-Wheel Steering (RWS)
+###  Rear-Wheel Steering (RWS)
 
 **Concept:**
 Rear wheels are allowed to steer with angle \( \delta_r \), improving agility at low speeds and stability at high speeds. The rear slip angle becomes:
@@ -179,20 +179,10 @@ J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\de
 
 ---
 
-## 📈 Project Overview
+##  Project Overview
 
 - Predictive controller (MPC) tracks a fixed lateral reference trajectory
 - Extended Kalman Filter (EKF) estimates unmeasured states from noisy observations
 
-### Files
-- `mpc_ekf_lane_tracking.py`: Main Python script with MPC+EKF logic
-- `README.md`: This file
-
-### Dependencies
-```bash
-pip install numpy matplotlib cvxpy
-```
-
----
 
 
