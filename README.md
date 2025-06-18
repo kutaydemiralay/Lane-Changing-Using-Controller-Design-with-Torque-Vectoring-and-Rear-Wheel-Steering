@@ -174,6 +174,7 @@ A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost fun
 
 
 ![TorqueVectoring](images/torquevectoring.png)
+Lane_Change_Using_MPC_RearWheelSteering.png
 
 *Figure: Torrque Vectoring input over trajectory with  *
 
@@ -181,6 +182,13 @@ Torque Vectoring slightly reduced the total steering input usage; however, it di
 
 
 ###  Rear-Wheel Steering (RWS)
+
+
+
+
+![Lane Change using MPC and RWS](images/Lane_Change_Using_MPC_RearWheelSteering.png)
+
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Rear Wheel Steering added*
 
 **Concept:**
 Rear wheels are allowed to steer with angle \( \delta_r \), improving agility at low speeds and stability at high speeds. The rear slip angle becomes:
