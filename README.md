@@ -240,6 +240,8 @@ As shown in the figures, rear-wheel steering significantly improves cornering be
 ### 🔍 Notebooks
 
 - [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
+- - [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with__TorqueVectoring.ipynb)
+  - - [Lane Change using MPC with Rear Wheel Steering (Jupyter Notebook)](LaneChange_with_RearWheelSteering.ipynb)
 
 
 ##  Project Overview
