@@ -144,6 +144,12 @@ As visible from the figures, the controller reaches the maximum allowable steeri
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Torque Vectoring added*
 
+
+![Steering input using MPC](images/Steering_input_tv.png)
+
+*Figure: Steering input over trajectory with Torque Vectoring added *
+
+
 ### ⚙ Torque Vectoring (TV)
 
 **Concept:**
