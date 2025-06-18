@@ -133,6 +133,13 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 *Figure: Steering input over trajectory*
 
 
+![Tracking Error vs. Time using MPC](images/tracking_error_vs_time.png)
+
+*Figure: Tracking error vs time*
+
+As visible from the figures, the controller reaches the maximum allowable steering angle during cornering. However, this alone is not sufficient to minimize the tracking error. To enhance the vehicle's controllability and improve tracking performance, we introduce an additional actuation technology: Torque Vectoring (TV).
+
+
 ##  Extensions: Torque Vectoring & Rear-Wheel Steering
 
 To enhance the vehicle’s lateral control authority and stability, we integrate:
