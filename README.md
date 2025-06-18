@@ -140,9 +140,9 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 As visible from the figures, the controller reaches the maximum allowable steering angle during cornering. However, this alone is not sufficient to minimize the tracking error. To enhance the vehicle's controllability and improve tracking performance, we introduce an additional actuation technology: Torque Vectoring (TV).
 
 
-##  Extensions: Torque Vectoring & Rear-Wheel Steering
+![Lane Change using MPC and TV](images/Lane_Change_Using_MPC_TV.png)
 
-To enhance the vehicle’s lateral control authority and stability, we integrate:
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Torque Vectoring added*
 
 ### ⚙ Torque Vectoring (TV)
 
