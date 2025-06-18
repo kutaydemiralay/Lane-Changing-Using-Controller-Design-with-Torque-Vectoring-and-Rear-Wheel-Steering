@@ -42,6 +42,16 @@ This results in a 2-wheel bicycle model.
      \alpha_r = - \frac{v_y - b r}{v_x}
      \]
 
+
+5. **Simplified dynamics:**
+
+   - Valid for low to moderate speeds where tire behavior is approximately linear
+
+   - No use of advanced tire models like Pacejka’s Magic Formula
+
+   - No load transfers or weight shifts are considered (constant normal forces)
+
+
 ---
 
 ### Continuous-Time Dynamics (Before Linearization)
