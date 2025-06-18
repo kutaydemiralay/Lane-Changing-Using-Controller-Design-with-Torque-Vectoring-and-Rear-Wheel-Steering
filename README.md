@@ -184,12 +184,6 @@ Torque Vectoring slightly reduced the total steering input usage; however, it di
 ###  Rear-Wheel Steering (RWS)
 
 
-
-
-![Lane Change using MPC and RWS](images/Lane_Change_Using_MPC_RearWheelSteering.png)
-
-*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Rear Wheel Steering added*
-
 **Concept:**
 Rear wheels are allowed to steer with angle \( \delta_r \), improving agility at low speeds and stability at high speeds. The rear slip angle becomes:
 \[
@@ -226,7 +220,24 @@ The cost function is extended with a penalty on \( \delta_r \) to avoid excessiv
 J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\delta_r} \cdot \delta_r^2 \right)
 \]
 
----
+
+
+
+![Lane Change using MPC and RWS](images/Lane_Change_Using_MPC_RearWheelSteering.png)
+
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Rear Wheel Steering added*
+
+
+
+
+![Steering input using MPC and RWS](images/Steering_Inputs_RWS.png)
+
+*Figure: Steering input over trajectory with  Rear Wheel Steering added *
+
+As shown in the figures, rear-wheel steering significantly improves cornering behavior and control authority. The tracking error decreased by more than 20 times, demonstrating a substantial enhancement in path-following performance. 
+
+
+
 
 ##  Project Overview
 
