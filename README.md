@@ -237,6 +237,9 @@ J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\de
 As shown in the figures, rear-wheel steering significantly improves cornering behavior and control authority. The tracking error decreased by more than 20 times, demonstrating a substantial enhancement in path-following performance. 
 
 
+### 🔍 Notebooks
+
+- [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
 
 
 ##  Project Overview
