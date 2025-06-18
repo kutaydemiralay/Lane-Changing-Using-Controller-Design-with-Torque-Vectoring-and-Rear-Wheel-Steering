@@ -140,15 +140,6 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 As visible from the figures, the controller reaches the maximum allowable steering angle during cornering. However, this alone is not sufficient to minimize the tracking error. To enhance the vehicle's controllability and improve tracking performance, we introduce an additional actuation technology: Torque Vectoring (TV).
 
 
-![Lane Change using MPC and TV](images/Lane_Change_Using_MPC_TV.png)
-
-*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Torque Vectoring added*
-
-
-![Steering input using MPC](images/Steering_input_tv.png)
-
-*Figure: Steering input over trajectory with Torque Vectoring added *
-
 
 ### ⚙ Torque Vectoring (TV)
 
@@ -171,6 +162,23 @@ where:
 - \( u_{tv} \) is an additional optimization variable representing the yaw moment from torque vectoring
 
 A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost function to penalize unnecessary torque usage.
+
+![Lane Change using MPC and TV](images/Lane_Change_Using_MPC_TV.png)
+
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Torque Vectoring added*
+
+
+![Steering input using MPC](images/Steering_input_tv.png)
+
+*Figure: Steering input over trajectory with Torque Vectoring added *
+
+
+![TorqueVectoring](images/torquevectoring.png)
+
+*Figure: Torrque Vectoring input over trajectory with  *
+
+Torque Vectoring slightly reduced the total steering input usage; however, it did not significantly improve tracking error. This is likely because the yaw moment generated through torque distribution between the rear wheels was too small to meaningfully influence the vehicle's lateral dynamics. At higher speeds or during sharp maneuvers, the required lateral forces for accurate path tracking are much larger, and torque vectoring alone—especially in a simplified linear model without load transfer or nonlinear tire effects—cannot generate enough corrective force to reduce tracking error.
+
 
 ###  Rear-Wheel Steering (RWS)
 
