@@ -128,6 +128,11 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output*
 
 
+![Steering input using MPC](images/Steering_input.png)
+
+*Figure: Steering input over trajectory*
+
+
 ##  Extensions: Torque Vectoring & Rear-Wheel Steering
 
 To enhance the vehicle’s lateral control authority and stability, we integrate:
