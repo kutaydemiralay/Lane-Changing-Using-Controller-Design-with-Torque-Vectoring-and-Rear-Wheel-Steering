@@ -123,7 +123,7 @@ y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
 \end{aligned}
 \]
 
-![Lane Change using MPC](images/Lane Change using Mpc.png)
+![Lane Change using MPC](images/Lane_Change_Using_MPC.png)
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output*
 
