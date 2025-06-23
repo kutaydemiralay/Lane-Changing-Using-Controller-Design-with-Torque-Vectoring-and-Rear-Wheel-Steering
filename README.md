@@ -1,5 +1,6 @@
-# Lane-Changing-Using-Controller-Design-with-Torque-Vectoring-and-Rear-Wheel-Steering
-Lane-changing control using Model Predictive Control (MPC) with torque vectoring and rear-wheel steering. Simulates a linearized 4-wheel vehicle and uses an Extended Kalman Filter (EKF) for state estimation. Compares advanced actuation strategies for improved lateral tracking and stability.
+# Lane-Changing-Using-Controller-Design-with-Torque-Vectoring,-Rear-Wheel-Steering,-and-Truck-Trailer-Dynamics
+
+Lane-changing control using **Model Predictive Control (MPC)** with torque vectoring, rear-wheel steering, and full truck-trailer hitch dynamics. The project simulates both a **linearized 4-wheel bicycle model** and a **nonlinear articulated truck-trailer system**, enhanced by an **Extended Kalman Filter (EKF)** for state estimation. It compares advanced actuation strategies and vehicle configurations for improved lateral tracking, yaw control, and high-speed maneuverability.
 
 
 # MPC Lane Change with EKF - Linearized 4-Wheel Vehicle Model
