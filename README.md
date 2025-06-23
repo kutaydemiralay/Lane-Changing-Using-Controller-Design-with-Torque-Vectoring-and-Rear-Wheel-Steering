@@ -296,7 +296,13 @@ F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
 
 
 ![Lane Change using MPC with Trailer](images/Truck_Trailer_LaneChange.png)
-![Tracking Error vs. Time using MPC](images/tracking_error_vs_time.png)
+
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Trailer added*
+
+
+![Tracking Error vs. Time using MPC with Trailer ](images/LateralTrackingError_Trailer.png)
+
+*Figure: Tracking error vs time with Trailer*
 ---
 
 
