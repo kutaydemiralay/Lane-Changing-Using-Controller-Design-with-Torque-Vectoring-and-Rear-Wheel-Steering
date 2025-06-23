@@ -313,12 +313,14 @@ As visible from the figures, the trailer makes lane changing significantly more 
 - [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
 - - [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with_TorqueVectoring.ipynb)
   - - [Lane Change using MPC with Rear Wheel Steering (Jupyter Notebook)](LaneChange_with_RearWheelSteering.ipynb)
+        - - [Lane Change using MPC with Trailer (Jupyter Notebook)](LaneChange_with_Trailer.ipynb)
 
 
 ##  Project Overview
 
 - Predictive controller (MPC) tracks a fixed lateral reference trajectory
 - Extended Kalman Filter (EKF) estimates unmeasured states from noisy observations
+- Rear Wheel Steering, Torque Vectoring, Trailer affects tested in lane change scenario of a 4-wheel vehicle
 
 
 
