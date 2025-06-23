@@ -311,7 +311,7 @@ As visible from the figures, the trailer makes lane changing significantly more 
 ### 🔍 Notebooks
 
 - [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
-- - [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with__TorqueVectoring.ipynb)
+- - [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with_TorqueVectoring.ipynb)
   - - [Lane Change using MPC with Rear Wheel Steering (Jupyter Notebook)](LaneChange_with_RearWheelSteering.ipynb)
 
 
