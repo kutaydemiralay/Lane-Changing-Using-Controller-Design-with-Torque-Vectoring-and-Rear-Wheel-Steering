@@ -43,6 +43,7 @@ This results in a 2-wheel bicycle model.
      \alpha_r = - \frac{v_y - b r}{v_x}
      \]
 
+6. **The tire is not saturated** (i.e., \( F_y \ll \mu F_z \)), meaning the linear tire model is valid and the lateral force does not exceed the friction limit.
 
 5. **Simplified dynamics:**
 
