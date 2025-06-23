@@ -305,6 +305,8 @@ F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
 *Figure: Tracking error vs time with Trailer*
 ---
 
+As visible from the figures, the trailer makes lane changing significantly more difficult and causes the maneuver to take longer compared to a 4-wheeler, even with the same allowable steering angle and speed.
+
 
 ### 🔍 Notebooks
 
