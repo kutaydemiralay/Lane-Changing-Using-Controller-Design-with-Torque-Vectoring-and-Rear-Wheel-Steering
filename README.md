@@ -293,6 +293,10 @@ F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
 \end{aligned}
 \]
 
+
+
+![Lane Change using MPC with Trailer](images/Truck_Trailer_LaneChange.png)
+![Tracking Error vs. Time using MPC](images/tracking_error_vs_time.png)
 ---
 
 
