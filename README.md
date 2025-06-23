@@ -142,7 +142,7 @@ As visible from the figures, the controller reaches the maximum allowable steeri
 
 
 
-### ⚙ Torque Vectoring (TV)
+###  Torque Vectoring (TV)
 
 **Concept:**
 Torque vectoring modulates the torque difference between left and right wheels (especially rear wheels) to generate a **yaw moment** without steering input. It effectively assists in cornering and stabilization, especially at high speeds.
@@ -236,6 +236,63 @@ J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\de
 *Figure: Steering input over trajectory with  Rear Wheel Steering added *
 
 As shown in the figures, rear-wheel steering significantly improves cornering behavior and control authority. The tracking error decreased by more than 20 times, demonstrating a substantial enhancement in path-following performance. 
+
+
+
+### Trailer
+
+In addition to conventional passenger vehicle models, this project also includes a realistic **truck-trailer system** modeled as an articulated vehicle with dynamic hitch feedback. This extension is crucial for simulating long and heavy vehicles that require careful coordination between the truck and trailer during maneuvers.
+
+The trailer is not controlled directly; instead, it follows the truck based on the kinematic and dynamic behavior at the hitch. Importantly, the trailer applies a **reaction torque** back to the truck, which is captured in the full dynamic model.
+
+#### 🔧 Key Features:
+- Full coupling between truck and trailer yaw dynamics
+- Hitch force feedback influencing truck yaw acceleration
+- Trailer yaw rate dynamics driven by hitch forces
+- Penalization of misalignment between truck and trailer headings to discourage jackknife behavior
+- Truck is responsible for tracking the reference path, while trailer alignment is enforced through cost terms
+
+#### 🔍 Modeled States:
+- \(v_y\): Lateral velocity of the truck  
+- \(r\): Yaw rate of the truck  
+- \(\psi\): Yaw angle (heading) of the truck  
+- \(y\): Lateral position of the truck  
+- \(\psi_R\): Yaw angle of the trailer  
+- \(r_R\): Yaw rate of the trailer  
+
+The MPC cost function tracks the truck’s lateral deviation while minimizing steering effort and trailer misalignment. This enables the truck to perform safe and smooth lane changes without inducing trailer swing or jackknife instability.
+
+**Tire Forces:**
+
+\[
+\begin{aligned}
+F_{yf} &= -C_f \left( \delta - \frac{v_y + a r}{v_x} \right) \\
+F_{yr} &= -C_r \left( \frac{-v_y + b r - l_t (r_R - r)}{v_x} \right) \\
+F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
+\end{aligned}
+\]
+
+**Truck Dynamics:**
+
+\[
+\begin{aligned}
+\dot{v}_y &= \frac{F_{yf} + F_{yr}}{m_T} - v_x r \\
+\dot{r} &= \frac{a F_{yf} - b F_{yr} + l_t F_{yR}}{I_{zT}} \\
+\dot{y} &= v_x \cdot \sin(\psi) \\
+\dot{\psi} &= r
+\end{aligned}
+\]
+
+**Trailer Dynamics:**
+
+\[
+\begin{aligned}
+\dot{\psi}_R &= r_R \\
+\dot{r}_R &= -\frac{l_t F_{yR}}{I_{zR}}
+\end{aligned}
+\]
+
+---
 
 
 ### 🔍 Notebooks
