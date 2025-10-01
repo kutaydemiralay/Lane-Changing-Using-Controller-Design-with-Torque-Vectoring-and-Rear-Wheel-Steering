@@ -59,38 +59,44 @@ This results in a 2-wheel bicycle model.
 ### Continuous-Time Dynamics (Before Linearization)
 
 State vector:
-\[
+
+$$
 \begin{bmatrix}
  v_y \\
  r
 \end{bmatrix}, \quad \text{where } v_y = \text{lateral velocity}, \; r = \text{yaw rate}
-\]
+$$
 
 Equations of motion:
-\[
+
+$$
 \begin{aligned}
 \dot{v}_y &= \frac{1}{m} (F_{yf} + F_{yr}) - v_x r \\
 \dot{r} &= \frac{1}{I_z} (a F_{yf} - b F_{yr})
 \end{aligned}
-\]
+$$
 
 Substituting tire forces:
-\[
+
+$$
 \begin{aligned}
 F_{yf} &= -C_f \left( \delta - \frac{v_y + a r}{v_x} \right) \\
 F_{yr} &= -C_r \left( -\frac{v_y - b r}{v_x} \right)
 \end{aligned}
-\]
+$$
 
 Plugging into the equations:
-\[
-\dot{v}_y = \frac{1}{m} \left( -C_f \left( \delta - \frac{v_y + a r}{v_x} \right) - C_r \left( \frac{v_y - b r}{v_x} \right) \right) - v_x r
-\]
-\[
-\dot{r} = \frac{1}{I_z} \left( -a C_f \left( \delta - \frac{v_y + a r}{v_x} \right) + b C_r \left( \frac{v_y - b r}{v_x} \right) \right)
-\]
 
-These are **nonlinear** due to \(v_x\) in the denominators and the product terms with \(\delta\). To make this model usable in optimization, we **linearize** around a nominal point and discretize.
+$$
+\dot{v}_y = \frac{1}{m} \left( -C_f \left( \delta - \frac{v_y + a r}{v_x} \right) - C_r \left( \frac{v_y - b r}{v_x} \right) \right) - v_x r
+$$
+
+$$
+\dot{r} = \frac{1}{I_z} \left( -a C_f \left( \delta - \frac{v_y + a r}{v_x} \right) + b C_r \left( \frac{v_y - b r}{v_x} \right) \right)
+$$
+
+These are **nonlinear** due to \(v_x\) in the denominators and the product terms with \(\delta\).  
+To make this model usable in optimization, we **linearize** around a nominal point and discretize.
 
 ---
 
