@@ -102,11 +102,11 @@ To make this model usable in optimization, we **linearize** around a nominal poi
 
 ---
 
-##  Linearized Discrete-Time Dynamics (Used in MPC)
+## Linearized Discrete-Time Dynamics (Used in MPC)
 
-After linearizing around \(v_y = 0, r = 0, \delta = 0\), and assuming constant speed \(v_x\), we obtain:
+After linearizing around $v_y = 0, r = 0, \delta = 0$, and assuming constant speed $v_x$, we obtain:
 
-\[
+$$
 \begin{aligned}
 A &= \begin{bmatrix}
 A_{11} & A_{12} \\
@@ -117,21 +117,28 @@ B_1 \\
 B_2
 \end{bmatrix} \\
 \text{with:} \\
-A_{11} &= -\frac{2C_f + 2C_r}{m v_x}, \quad A_{12} = -v_x - \frac{2C_f a - 2C_r b}{m v_x} \\
-A_{21} &= -\frac{2C_f a - 2C_r b}{I_z v_x}, \quad A_{22} = -\frac{2C_f a^2 + 2C_r b^2}{I_z v_x} \\
-B_1 &= \frac{2 C_f}{m}, \quad B_2 = \frac{2 C_f a}{I_z}
+A_{11} &= -\frac{2C_f + 2C_r}{m v_x}, \quad 
+A_{12} = -v_x - \frac{2C_f a - 2C_r b}{m v_x} \\
+A_{21} &= -\frac{2C_f a - 2C_r b}{I_z v_x}, \quad 
+A_{22} = -\frac{2C_f a^2 + 2C_r b^2}{I_z v_x} \\
+B_1 &= \frac{2 C_f}{m}, \quad 
+B_2 = \frac{2 C_f a}{I_z}
 \end{aligned}
-\]
+$$
 
 The full linearized discrete-time update (Euler) becomes:
-\[
+
+$$
 \begin{aligned}
-v_y[k+1] &= v_y[k] + \Delta t (A_{11} v_y[k] + A_{12} r[k] + B_1 \delta[k]) \\
-r[k+1] &= r[k] + \Delta t (A_{21} v_y[k] + A_{22} r[k] + B_2 \delta[k]) \\
-y[k+1] &= y[k] + \Delta t (v_y[k] + v_x \cdot \psi[k]) \\
+v_y[k+1] &= v_y[k] + \Delta t \big( A_{11} v_y[k] + A_{12} r[k] + B_1 \delta[k] \big) \\
+r[k+1]   &= r[k]   + \Delta t \big( A_{21} v_y[k] + A_{22} r[k] + B_2 \delta[k] \big) \\
+y[k+1]   &= y[k]   + \Delta t \big( v_y[k] + v_x \cdot \psi[k] \big) \\
 \psi[k+1] &= \psi[k] + \Delta t \cdot r[k]
 \end{aligned}
-\]
+$$
+
+---
+
 
 ![Lane Change using MPC](images/Lane_Change_Using_MPC.png)
 
