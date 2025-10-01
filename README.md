@@ -158,27 +158,38 @@ As visible from the figures, the controller reaches the maximum allowable steeri
 
 
 
-###  Torque Vectoring (TV)
+### Torque Vectoring (TV)
 
-**Concept:**
-Torque vectoring modulates the torque difference between left and right wheels (especially rear wheels) to generate a **yaw moment** without steering input. It effectively assists in cornering and stabilization, especially at high speeds.
+**Concept:**  
+Torque vectoring modulates the torque difference between left and right wheels (especially rear wheels) to generate a **yaw moment** without steering input.  
+It effectively assists in cornering and stabilization, especially at high speeds.
 
-**Modeling:**
-We augment the yaw dynamics with a control input \( u_{tv} \) that directly contributes to the yaw moment:
-\[
+**Modeling:**  
+We augment the yaw dynamics with a control input $u_{tv}$ that directly contributes to the yaw moment:
+
+$$
 \dot{r} = \frac{1}{I_z} (a F_{yf} - b F_{yr}) + \frac{1}{I_z} u_{tv}
-\]
+$$
 
 In the linearized discrete model:
-\[
-r[k+1] = r[k] + \Delta t (A_{21} v_y[k] + A_{22} r[k] + B_2 \delta[k] + B_{tv} u_{tv}[k])
-\]
 
-where:
-- \( B_{tv} = \frac{1}{I_z} \)
-- \( u_{tv} \) is an additional optimization variable representing the yaw moment from torque vectoring
+$$
+r[k+1] = r[k] + \Delta t \big( A_{21} v_y[k] + A_{22} r[k] + B_2 \delta[k] + B_{tv} u_{tv}[k] \big)
+$$
 
-A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost function to penalize unnecessary torque usage.
+where:  
+
+- $B_{tv} = \tfrac{1}{I_z}$  
+- $u_{tv}$ is an additional optimization variable representing the yaw moment from torque vectoring  
+
+A regularization term  
+
+$$
+\lambda_{tv} \, u_{tv}^2
+$$  
+
+is added to the cost function to penalize unnecessary torque usage.
+
 
 ![Lane Change using MPC and TV](images/Lane_Change_Using_MPC_TV.png)
 
@@ -198,47 +209,52 @@ Lane_Change_Using_MPC_RearWheelSteering.png
 Torque Vectoring slightly reduced the total steering input usage; however, it did not significantly improve tracking error. This is likely because the yaw moment generated through torque distribution between the rear wheels was too small to meaningfully influence the vehicle's lateral dynamics. At higher speeds or during sharp maneuvers, the required lateral forces for accurate path tracking are much larger, and torque vectoring alone—especially in a simplified linear model without load transfer or nonlinear tire effects—cannot generate enough corrective force to reduce tracking error.
 
 
-###  Rear-Wheel Steering (RWS)
+### Rear-Wheel Steering (RWS)
 
+**Concept:**  
+Rear wheels are allowed to steer with angle $\delta_r$, improving agility at low speeds and stability at high speeds.  
+The rear slip angle becomes:
 
-**Concept:**
-Rear wheels are allowed to steer with angle \( \delta_r \), improving agility at low speeds and stability at high speeds. The rear slip angle becomes:
-\[
+$$
 \alpha_r = \delta_r - \frac{v_y - b r}{v_x}
-\]
+$$
 
-**Modeling:**
-We now have two steering inputs:
-- \( \delta_f \): front steering angle
-- \( \delta_r \): rear steering angle
+**Modeling:**  
+We now have two steering inputs:  
+- $\delta_f$: front steering angle  
+- $\delta_r$: rear steering angle  
 
 Both contribute to lateral forces:
-\[
+
+$$
 \begin{aligned}
 F_{yf} &= -C_f \left( \delta_f - \frac{v_y + a r}{v_x} \right) \\
 F_{yr} &= -C_r \left( \delta_r - \frac{v_y - b r}{v_x} \right)
 \end{aligned}
-\]
+$$
 
 Linearized yaw dynamics now becomes:
-\[
+
+$$
 \dot{r} = \frac{1}{I_z} (a F_{yf} - b F_{yr})
-\]
-\[
-\Rightarrow r[k+1] = r[k] + \Delta t (A_{21} v_y[k] + A_{22} r[k] + B_{2f} \delta_f[k] + B_{2r} \delta_r[k])
-\]
+$$
+
+$$
+\Rightarrow r[k+1] = r[k] + \Delta t \big( A_{21} v_y[k] + A_{22} r[k] + B_{2f} \delta_f[k] + B_{2r} \delta_r[k] \big)
+$$
 
 with:
-- \( B_{2f} = \frac{2 C_f a}{I_z} \)
-- \( B_{2r} = -\frac{2 C_r b}{I_z} \)
 
-The cost function is extended with a penalty on \( \delta_r \) to avoid excessive rear steering:
-\[
-J = \sum_k \left( \text{tracking error} + w_{\delta_f} \cdot \delta_f^2 + w_{\delta_r} \cdot \delta_r^2 \right)
-\]
+- $B_{2f} = \tfrac{2 C_f a}{I_z}$  
+- $B_{2r} = -\tfrac{2 C_r b}{I_z}$  
 
+---
 
+The cost function is extended with a penalty on $\delta_r$ to avoid excessive rear steering:
 
+$$
+J = \sum_k \left( \text{tracking error} + w_{\delta_f} \, \delta_f^2 + w_{\delta_r} \, \delta_r^2 \right)
+$$
 
 ![Lane Change using MPC and RWS](images/Lane_Change_Using_MPC_RearWheelSteering.png)
 
