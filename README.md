@@ -294,35 +294,40 @@ The trailer is not controlled directly; instead, it follows the truck based on t
 
 The MPC cost function tracks the truck’s lateral deviation while minimizing steering effort and trailer misalignment. This enables the truck to perform safe and smooth lane changes without inducing trailer swing or jackknife instability.
 
-**Tire Forces:**
+### Tire Forces
 
-\[
+$$
 \begin{aligned}
 F_{yf} &= -C_f \left( \delta - \frac{v_y + a r}{v_x} \right) \\
 F_{yr} &= -C_r \left( \frac{-v_y + b r - l_t (r_R - r)}{v_x} \right) \\
 F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
 \end{aligned}
-\]
+$$
 
-**Truck Dynamics:**
+---
 
-\[
+### Truck Dynamics
+
+$$
 \begin{aligned}
 \dot{v}_y &= \frac{F_{yf} + F_{yr}}{m_T} - v_x r \\
-\dot{r} &= \frac{a F_{yf} - b F_{yr} + l_t F_{yR}}{I_{zT}} \\
-\dot{y} &= v_x \cdot \sin(\psi) \\
+\dot{r}   &= \frac{a F_{yf} - b F_{yr} + l_t F_{yR}}{I_{zT}} \\
+\dot{y}   &= v_x \cdot \sin(\psi) \\
 \dot{\psi} &= r
 \end{aligned}
-\]
+$$
 
-**Trailer Dynamics:**
+---
 
-\[
+### Trailer Dynamics
+
+$$
 \begin{aligned}
 \dot{\psi}_R &= r_R \\
 \dot{r}_R &= -\frac{l_t F_{yR}}{I_{zR}}
 \end{aligned}
-\]
+$$
+
 
 
 
