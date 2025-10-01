@@ -175,7 +175,7 @@ A regularization term \( \lambda_{tv} \cdot u_{tv}^2 \) is added to the cost fun
 *Figure: Steering input over trajectory with Torque Vectoring added *
 
 
-![TorqueVectoring](images/torquevectoring.png)
+![TorqueVectoring](images/Torquevectoring.png)
 Lane_Change_Using_MPC_RearWheelSteering.png
 
 *Figure: Torrque Vectoring input over trajectory with  *
