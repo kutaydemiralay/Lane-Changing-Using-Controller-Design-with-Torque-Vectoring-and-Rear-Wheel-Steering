@@ -17,44 +17,46 @@ We use a **linearized bicycle model** (4-wheel simplification) assuming constant
 
 This results in a 2-wheel bicycle model.
 
-###  Assumptions in Bicycle Model
+### Assumptions in Bicycle Model
 
 1. **Symmetric vehicle:**
-   - Identical left/right tires
-   - No roll or pitch modeled
+   - Identical left/right tires  
+   - No roll or pitch modeled  
 
 2. **Single steering input:**
-   - The front wheels' steering is simplified into one average value \(\delta\).
+   - The front wheels' steering is simplified into one average value $\delta$  
 
 3. **Tire force approximation:**
-   - Lateral tire forces:
-     \[
+   - Lateral tire forces:  
+
+     $$
      F_y = -C_\alpha \cdot \alpha
-     \]
-     where \(C_\alpha\) is the cornering stiffness, and \(\alpha\) is the slip angle.
+     $$
+
+     where $C_\alpha$ is the cornering stiffness, and $\alpha$ is the slip angle.  
 
 4. **Slip angles:**
-   - Front:
-     \[
+   - Front:  
+
+     $$
      \alpha_f = \delta - \frac{v_y + a r}{v_x}
-     \]
-   - Rear:
-     \[
-     \alpha_r = - \frac{v_y - b r}{v_x}
-     \]
+     $$
 
-6. **The tire is not saturated** (i.e., \( F_y \ll \mu F_z \)), meaning the linear tire model is valid and the lateral force does not exceed the friction limit.
+   - Rear:  
 
-5. **Simplified dynamics:**
+     $$
+     \alpha_r = -\frac{v_y - b r}{v_x}
+     $$
 
-   - Valid for low to moderate speeds where tire behavior is approximately linear
+5. **The tire is not saturated:**  
+   - i.e., $F_y \ll \mu F_z$, meaning the linear tire model is valid and the lateral force does not exceed the friction limit.  
 
-   - No use of advanced tire models like Pacejka’s Magic Formula
-
+6. **Simplified dynamics:**  
+   - Valid for low to moderate speeds where tire behavior is approximately linear  
+   - No use of advanced tire models like Pacejka’s *Magic Formula*  
    - No load transfers or weight shifts are considered (constant normal forces)
-
-
----
+  
+-----
 
 ### Continuous-Time Dynamics (Before Linearization)
 
