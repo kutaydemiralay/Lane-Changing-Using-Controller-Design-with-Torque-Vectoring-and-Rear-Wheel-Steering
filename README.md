@@ -17,36 +17,78 @@ We use a **linearized bicycle model** (4-wheel simplification) assuming constant
 
 This results in a 2-wheel bicycle model.
 
-### Assumptions in Bicycle Model
+## Vehicle Model and Dynamics
 
-1. **Symmetric vehicle:**
-   - Identical left/right tires  
-   - No roll or pitch modeled  
+We use a **linearized bicycle model** (4-wheel simplification) assuming constant longitudinal velocity
 
-2. **Single steering input:**
-   - The front wheels' steering is simplified into one average value $\delta$  
+$$
+v_x = v_{\text{long}}
+$$
 
-3. **Tire force approximation:**
-   - Lateral tire forces:  
+The actual vehicle has **four wheels**, but for modeling simplicity we merge:
 
-     $$
-     F_y = -C_\alpha \cdot \alpha
-     $$
+- The **left and right front tires** into a single equivalent **front wheel**
+- The **left and right rear tires** into a single equivalent **rear wheel**
 
-     where $C_\alpha$ is the cornering stiffness, and $\alpha$ is the slip angle.  
+This results in the classical **2-wheel bicycle model**.
 
-4. **Slip angles:**
-   - Front:  
+---
 
-     $$
-     \alpha_f = \delta - \frac{v_y + a r}{v_x}
-     $$
+## Assumptions in the Bicycle Model
 
-   - Rear:  
+### 1. Symmetric Vehicle
+- Identical left/right tires  
+- No roll or pitch dynamics are modeled  
+- Only planar motion (x–y plane)
 
-     $$
-     \alpha_r = -\frac{v_y - b r}{v_x}
-     $$
+### 2. Single Steering Input
+
+The steering of the two front wheels is simplified into a **single average steering angle**
+
+$$
+\delta
+$$
+
+### 3. Tire Force Approximation
+
+Lateral tire forces are approximated using a **linear tire model**
+
+$$
+F_y = -C_\alpha \cdot \alpha
+$$
+
+where:
+
+- $C_\alpha$ : cornering stiffness  
+- $\alpha$ : tire slip angle
+
+---
+
+## Slip Angles
+
+### Front Tire
+
+$$
+\alpha_f = \delta - \frac{v_y + a r}{v_x}
+$$
+
+### Rear Tire
+
+$$
+\alpha_r = -\frac{v_y - b r}{v_x}
+$$
+
+where:
+
+- $v_x$ : longitudinal velocity  
+- $v_y$ : lateral velocity  
+- $r$ : yaw rate  
+- $a$ : distance from CG to front axle  
+- $b$ : distance from CG to rear axle  
+
+---
+
+This model is widely used in **vehicle dynamics, MPC path tracking, and lane-change control design** because it captures the dominant **lateral dynamics and yaw motion** while remaining computationally efficient.
 
 5. **The tire is not saturated:**  
    - i.e., $F_y \ll \mu F_z$, meaning the linear tire model is valid and the lateral force does not exceed the friction limit.  
