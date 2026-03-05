@@ -34,20 +34,42 @@ This results in the classical **2-wheel bicycle model**.
 
 ---
 
+## Vehicle Model and Dynamics
+
+We use a **linearized bicycle model** (4-wheel simplification) assuming constant longitudinal velocity
+
+$$
+v_x = v_{\text{long}}
+$$
+
+The actual vehicle has **four wheels**, but for modeling simplicity we merge:
+
+- The **left and right front tires** into a single equivalent **front wheel**
+- The **left and right rear tires** into a single equivalent **rear wheel**
+
+This results in the classical **2-wheel bicycle model**.
+
+---
+
 ## Assumptions in the Bicycle Model
 
 ### 1. Symmetric Vehicle
+
 - Identical left/right tires  
 - No roll or pitch dynamics are modeled  
-- Only planar motion (x–y plane)
+- Motion is restricted to the **planar (x–y) direction**
+
+---
 
 ### 2. Single Steering Input
 
-The steering of the two front wheels is simplified into a **single average steering angle**
+The steering of the two front wheels is simplified into a **single steering angle**
 
 $$
 \delta
 $$
+
+---
 
 ### 3. Tire Force Approximation
 
@@ -60,7 +82,7 @@ $$
 where:
 
 - $C_\alpha$ : cornering stiffness  
-- $\alpha$ : tire slip angle
+- $\alpha$ : tire slip angle  
 
 ---
 
@@ -83,22 +105,44 @@ where:
 - $v_x$ : longitudinal velocity  
 - $v_y$ : lateral velocity  
 - $r$ : yaw rate  
-- $a$ : distance from CG to front axle  
-- $b$ : distance from CG to rear axle  
+- $a$ : distance from center of gravity to front axle  
+- $b$ : distance from center of gravity to rear axle  
 
 ---
 
+## Model Validity and Limitations
+
 This model is widely used in **vehicle dynamics, MPC path tracking, and lane-change control design** because it captures the dominant **lateral dynamics and yaw motion** while remaining computationally efficient.
 
-5. **The tire is not saturated:**  
-   - i.e., $F_y \ll \mu F_z$, meaning the linear tire model is valid and the lateral force does not exceed the friction limit.  
+### Tire Linear Region
 
-6. **Simplified dynamics:**  
-   - Valid for low to moderate speeds where tire behavior is approximately linear  
-   - No use of advanced tire models like Pacejka’s *Magic Formula*  
-   - No load transfers or weight shifts are considered (constant normal forces)
-  
------
+The tire is assumed to operate in the **linear region**, meaning it is **not saturated**:
+
+$$
+F_y \ll \mu F_z
+$$
+
+where:
+
+- $\mu$ : tire-road friction coefficient  
+- $F_z$ : normal force on the tire  
+
+This assumption ensures the **linear tire model remains valid**, meaning the generated lateral force does not exceed the friction limit.
+
+---
+
+### Simplified Dynamics Assumptions
+
+The bicycle model assumes:
+
+- Valid operation at **low to moderate speeds** where tire behavior is approximately linear  
+- **No advanced nonlinear tire models** such as **Pacejka's Magic Formula** are used  
+- **No load transfer effects** (weight shifting during acceleration, braking, or cornering)  
+- **Constant normal forces** on the tires  
+
+---
+
+Because of these simplifications, the bicycle model provides a **good balance between physical realism and computational efficiency**, making it widely used in **control design, trajectory tracking, and autonomous driving research**.
 
 ### Continuous-Time Dynamics (Before Linearization)
 
