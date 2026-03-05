@@ -9,30 +9,7 @@ This repository demonstrates a simple lane change and hold maneuver using **Mode
 
 ---
 
-##  Vehicle Model and Dynamics
 
-We use a **linearized bicycle model** (4-wheel simplification) assuming constant longitudinal velocity \(v_x = v_{\text{long}}\). The actual vehicle has 4 wheels, but for simplicity, we merge:
-- The left and right **front tires** into a single equivalent front wheel.
-- The left and right **rear tires** into a single equivalent rear wheel.
-
-This results in a 2-wheel bicycle model.
-
-## Vehicle Model and Dynamics
-
-We use a **linearized bicycle model** (4-wheel simplification) assuming constant longitudinal velocity
-
-$$
-v_x = v_{\text{long}}
-$$
-
-The actual vehicle has **four wheels**, but for modeling simplicity we merge:
-
-- The **left and right front tires** into a single equivalent **front wheel**
-- The **left and right rear tires** into a single equivalent **rear wheel**
-
-This results in the classical **2-wheel bicycle model**.
-
----
 
 ## Vehicle Model and Dynamics
 
