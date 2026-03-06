@@ -240,6 +240,15 @@ y[k+1]   &= y[k]   + \Delta t \big( v_y[k] + v_x \cdot \psi[k] \big) \\
 \end{aligned}
 $$
 
+
+![Lane Change using MPC and Pacejka Tire Model Validation](images/MPC_Pacejka.png)
+
+*Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output vs Pacejka Tire Model Validation*
+
+Even though the MPC controller tracks the reference trajectory well when using the linear bicycle model, the vehicle begins to fall behind once the nonlinear Pacejka tire model is used for validation. This occurs because the linear tire model assumed by the MPC predicts lateral forces that grow linearly with slip angle, while the Pacejka model captures the nonlinear behavior and saturation of real tires. As the maneuver progresses and slip angles increase, the nonlinear tire model generates less additional lateral force than the linear model predicts, resulting in reduced yaw response and slower lateral motion. Consequently, the vehicle cannot follow the reference trajectory as aggressively as the linear MPC expects, causing the nonlinear validation trajectory to lag behind the planned path.
+
+---
+
 ---
 
 ![Lane Change using MPC](images/Lane_Change_Using_MPC.png)
