@@ -1,15 +1,19 @@
 # Lane-Changing-Using-Controller-Design-with-Torque-Vectoring,-Rear-Wheel-Steering,-and-Truck-Trailer-Dynamics
 
-Lane-changing control using **Model Predictive Control (MPC)** with torque vectoring, rear-wheel steering, and full truck-trailer hitch dynamics. The project simulates both a **linearized 4-wheel bicycle model** and a **nonlinear articulated truck-trailer system**, enhanced by an **Extended Kalman Filter (EKF)** for state estimation. It compares advanced actuation strategies and vehicle configurations for improved lateral tracking, yaw control, and high-speed maneuverability.
+Lane-changing control using **Model Predictive Control (MPC)** with torque vectoring, rear-wheel steering, and full truck-trailer hitch dynamics. The project simulates both a **linearized 4-wheel bicycle model** used for controller design and a **nonlinear articulated truck-trailer system** used for validation, enhanced by an **Extended Kalman Filter (EKF)** for state estimation. It compares advanced actuation strategies and vehicle configurations for improved lateral tracking, yaw control, and high-speed maneuverability.
 
+In the controller design stage, the system uses a **linearized bicycle model** for computationally efficient MPC prediction. In the validation stage, the vehicle is also evaluated using a **nonlinear tire model based on Pacejka's Magic Formula**, allowing the controller to be tested under more realistic tire behavior, including nonlinear lateral force generation and tire saturation effects.
 
 # MPC Lane Change with EKF - Linearized 4-Wheel Vehicle Model
 
 This repository demonstrates a simple lane change and hold maneuver using **Model Predictive Control (MPC)** with a linearized 4-wheel (bicycle) vehicle model, enhanced by an **Extended Kalman Filter (EKF)** for state estimation.
 
+The project uses two model fidelities:
+
+- a **linearized bicycle model** for the controller prediction model inside MPC
+- a **higher-fidelity nonlinear validation model** using **Pacejka tire forces** to evaluate closed-loop performance under more realistic tire dynamics
+
 ---
-
-
 
 ## Vehicle Model and Dynamics
 
@@ -48,9 +52,9 @@ $$
 
 ---
 
-### 3. Tire Force Approximation
+### 3. Tire Force Approximation for MPC Prediction Model
 
-Lateral tire forces are approximated using a **linear tire model**
+Lateral tire forces in the **controller prediction model** are approximated using a **linear tire model**
 
 $$
 F_y = -C_\alpha \cdot \alpha
@@ -60,6 +64,8 @@ where:
 
 - $C_\alpha$ : cornering stiffness  
 - $\alpha$ : tire slip angle  
+
+This linear tire approximation is used inside MPC because it keeps the model computationally efficient and suitable for online optimization.
 
 ---
 
@@ -113,15 +119,50 @@ This assumption ensures the **linear tire model remains valid**, meaning the gen
 The bicycle model assumes:
 
 - Valid operation at **low to moderate speeds** where tire behavior is approximately linear  
-- **No advanced nonlinear tire models** such as **Pacejka's Magic Formula** are used  
 - **No load transfer effects** (weight shifting during acceleration, braking, or cornering)  
 - **Constant normal forces** on the tires  
+- Motion restricted to planar lateral-yaw dynamics
 
 ---
 
 Because of these simplifications, the bicycle model provides a **good balance between physical realism and computational efficiency**, making it widely used in **control design, trajectory tracking, and autonomous driving research**.
 
-### Continuous-Time Dynamics (Before Linearization)
+---
+
+## Pacejka Tire Model in Validation
+
+Although the MPC prediction model uses a linear tire approximation, the controller is also validated using a **nonlinear tire model based on Pacejka’s Magic Formula**.
+
+For validation, the lateral tire force can be written as
+
+$$
+F_y = D \sin \left( C \tan^{-1}\left(B\alpha - E\left(B\alpha - \tan^{-1}(B\alpha)\right)\right) \right)
+$$
+
+where:
+
+- $B$ : stiffness factor  
+- $C$ : shape factor  
+- $D$ : peak factor  
+- $E$ : curvature factor  
+- $\alpha$ : tire slip angle  
+
+This nonlinear model captures:
+
+- nonlinear lateral tire behavior  
+- tire saturation at larger slip angles  
+- more realistic high-speed maneuver behavior  
+
+So the overall workflow is:
+
+- **Linear bicycle model** $\rightarrow$ used inside MPC for prediction and control design  
+- **Nonlinear Pacejka tire model** $\rightarrow$ used in validation to test controller robustness against more realistic tire behavior  
+
+This reflects a common automotive controls workflow in which a simplified model is used for control synthesis, while a higher-fidelity model is used for closed-loop evaluation.
+
+---
+
+## Continuous-Time Dynamics (Before Linearization)
 
 State vector:
 
@@ -141,7 +182,7 @@ $$
 \end{aligned}
 $$
 
-Substituting tire forces:
+Substituting tire forces for the **linear prediction model**:
 
 $$
 \begin{aligned}
@@ -160,8 +201,7 @@ $$
 \dot{r} = \frac{1}{I_z} \left( -a C_f \left( \delta - \frac{v_y + a r}{v_x} \right) + b C_r \left( \frac{v_y - b r}{v_x} \right) \right)
 $$
 
-These are **nonlinear** due to \(v_x\) in the denominators and the product terms with \(\delta\).  
-To make this model usable in optimization, we **linearize** around a nominal point and discretize.
+These are treated as the continuous-time dynamics used before linearization. To make this model usable in optimization, we **linearize** around a nominal point and discretize.
 
 ---
 
@@ -202,24 +242,25 @@ $$
 
 ---
 
-
 ![Lane Change using MPC](images/Lane_Change_Using_MPC.png)
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output*
 
+---
 
 ![Steering input using MPC](images/Steering_input.png)
 
 *Figure: Steering input over trajectory*
 
+---
 
 ![Tracking Error vs. Time using MPC](images/tracking_error_vs_time.png)
 
 *Figure: Tracking error vs time*
 
-As visible from the figures, the controller reaches the maximum allowable steering angle during cornering. However, this alone is not sufficient to minimize the tracking error. To enhance the vehicle's controllability and improve tracking performance, we introduce an additional actuation technology: Torque Vectoring (TV).
+As visible from the figures, the controller reaches the maximum allowable steering angle during cornering. However, this alone is not sufficient to minimize the tracking error. To enhance the vehicle's controllability and improve tracking performance, we introduce an additional actuation technology: **Torque Vectoring (TV)**.
 
-
+---
 
 ### Torque Vectoring (TV)
 
@@ -253,24 +294,27 @@ $$
 
 is added to the cost function to penalize unnecessary torque usage.
 
+---
 
 ![Lane Change using MPC and TV](images/Lane_Change_Using_MPC_TV.png)
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Torque Vectoring added*
 
+---
 
 ![Steering input using MPC](images/Steering_input_tv.png)
 
-*Figure: Steering input over trajectory with Torque Vectoring added *
+*Figure: Steering input over trajectory with Torque Vectoring added*
 
+---
 
 ![TorqueVectoring](images/Torquevectoring.png)
-Lane_Change_Using_MPC_RearWheelSteering.png
 
-*Figure: Torrque Vectoring input over trajectory with  *
+*Figure: Torque Vectoring input over trajectory*
 
 Torque Vectoring slightly reduced the total steering input usage; however, it did not significantly improve tracking error. This is likely because the yaw moment generated through torque distribution between the rear wheels was too small to meaningfully influence the vehicle's lateral dynamics. At higher speeds or during sharp maneuvers, the required lateral forces for accurate path tracking are much larger, and torque vectoring alone—especially in a simplified linear model without load transfer or nonlinear tire effects—cannot generate enough corrective force to reduce tracking error.
 
+---
 
 ### Rear-Wheel Steering (RWS)
 
@@ -284,6 +328,7 @@ $$
 
 **Modeling:**  
 We now have two steering inputs:  
+
 - $\delta_f$: front steering angle  
 - $\delta_r$: rear steering angle  
 
@@ -311,28 +356,27 @@ with:
 - $B_{2f} = \tfrac{2 C_f a}{I_z}$  
 - $B_{2r} = -\tfrac{2 C_r b}{I_z}$  
 
----
-
 The cost function is extended with a penalty on $\delta_r$ to avoid excessive rear steering:
 
 $$
 J = \sum_k \left( \text{tracking error} + w_{\delta_f} \, \delta_f^2 + w_{\delta_r} \, \delta_r^2 \right)
 $$
 
+---
+
 ![Lane Change using MPC and RWS](images/Lane_Change_Using_MPC_RearWheelSteering.png)
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Rear Wheel Steering added*
 
-
-
+---
 
 ![Steering input using MPC and RWS](images/Steering_Inputs_RWS.png)
 
-*Figure: Steering input over trajectory with  Rear Wheel Steering added *
+*Figure: Steering input over trajectory with Rear Wheel Steering added*
 
-As shown in the figures, rear-wheel steering significantly improves cornering behavior and control authority. The tracking error decreased by more than 20 times, demonstrating a substantial enhancement in path-following performance. 
+As shown in the figures, rear-wheel steering significantly improves cornering behavior and control authority. The tracking error decreased by more than 20 times, demonstrating a substantial enhancement in path-following performance.
 
-
+---
 
 ### Trailer
 
@@ -348,16 +392,20 @@ The trailer is not controlled directly; instead, it follows the truck based on t
 - Truck is responsible for tracking the reference path, while trailer alignment is enforced through cost terms
 
 #### 🔍 Modeled States:
-- \(v_y\): Lateral velocity of the truck  
-- \(r\): Yaw rate of the truck  
-- \(\psi\): Yaw angle (heading) of the truck  
-- \(y\): Lateral position of the truck  
-- \(\psi_R\): Yaw angle of the trailer  
-- \(r_R\): Yaw rate of the trailer  
+- \(v_y\): lateral velocity of the truck  
+- \(r\): yaw rate of the truck  
+- \(\psi\): yaw angle (heading) of the truck  
+- \(y\): lateral position of the truck  
+- \(\psi_R\): yaw angle of the trailer  
+- \(r_R\): yaw rate of the trailer  
 
 The MPC cost function tracks the truck’s lateral deviation while minimizing steering effort and trailer misalignment. This enables the truck to perform safe and smooth lane changes without inducing trailer swing or jackknife instability.
 
+---
+
 ### Tire Forces
+
+For the articulated truck-trailer model, the lateral tire forces are modeled as
 
 $$
 \begin{aligned}
@@ -367,9 +415,23 @@ F_{yR} &= -C_r \left( \frac{l_t (r_R - r)}{v_x} \right)
 \end{aligned}
 $$
 
+where:
+
+- $F_{yf}$ : lateral force at the truck front axle  
+- $F_{yr}$ : lateral force at the truck rear axle  
+- $F_{yR}$ : lateral force generated at the trailer axle  
+- $l_t$ : hitch-to-trailer axle distance  
+- $r_R$ : trailer yaw rate  
+
+These forces capture the dynamic coupling between the truck and the trailer through the hitch.
+
+For higher-fidelity validation, these linear lateral tire forces can also be replaced by **Pacejka-based nonlinear lateral forces**, allowing the articulated system to be evaluated under more realistic tire saturation behavior.
+
 ---
 
 ### Truck Dynamics
+
+The truck body dynamics are modeled as
 
 $$
 \begin{aligned}
@@ -380,9 +442,18 @@ $$
 \end{aligned}
 $$
 
+where:
+
+- $m_T$ : truck mass  
+- $I_{zT}$ : truck yaw inertia  
+
+These equations describe the truck’s lateral motion, yaw motion, lateral position, and heading evolution.
+
 ---
 
 ### Trailer Dynamics
+
+The trailer yaw dynamics are modeled as
 
 $$
 \begin{aligned}
@@ -391,35 +462,44 @@ $$
 \end{aligned}
 $$
 
+where:
 
+- $I_{zR}$ : trailer yaw inertia  
 
+These equations capture how trailer yaw evolves due to the lateral hitch/tire forces.
+
+---
 
 ![Lane Change using MPC with Trailer](images/Truck_Trailer_LaneChange.png)
 
 *Figure: x vs y trajectory of the vehicle’s lane change — reference vs MPC output with Trailer added*
 
+---
 
 ![Tracking Error vs. Time using MPC with Trailer ](images/LateralTrackingError_Trailer.png)
 
 *Figure: Tracking error vs time with Trailer*
+
 ---
 
-As visible from the figures, the trailer makes lane changing significantly more difficult and causes the maneuver to take longer compared to a 4-wheeler, even with the same allowable steering angle and speed.
+As visible from the figures, the trailer makes lane changing significantly more difficult and causes the maneuver to take longer compared to a 4-wheeler, even with the same allowable steering angle and speed. The articulated dynamics introduce additional yaw coupling and trailer alignment constraints, which reduce maneuverability and make accurate tracking more challenging.
 
+---
 
 ### 🔍 Notebooks
 
 - [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
-- - [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with_TorqueVectoring.ipynb)
-  - - [Lane Change using MPC with Rear Wheel Steering (Jupyter Notebook)](LaneChange_with_RearWheelSteering.ipynb)
-        - - [Lane Change using MPC with Trailer (Jupyter Notebook)](LaneChange_with_Trailer.ipynb)
+- [Lane Change using MPC with Torque Vectoring (Jupyter Notebook)](LaneChange_with_TorqueVectoring.ipynb)
+- [Lane Change using MPC with Rear Wheel Steering (Jupyter Notebook)](LaneChange_with_RearWheelSteering.ipynb)
+- [Lane Change using MPC with Trailer (Jupyter Notebook)](LaneChange_with_Trailer.ipynb)
 
+---
 
-##  Project Overview
+## Project Overview
 
-- Predictive controller (MPC) tracks a fixed lateral reference trajectory
-- Extended Kalman Filter (EKF) estimates unmeasured states from noisy observations
-- Rear Wheel Steering, Torque Vectoring, Trailer affects tested in lane change scenario of a 4-wheel vehicle
-
-
-
+- Predictive controller (**MPC**) tracks a fixed lateral reference trajectory
+- **Extended Kalman Filter (EKF)** estimates unmeasured states from noisy observations
+- **Rear-Wheel Steering**, **Torque Vectoring**, and **Trailer dynamics** are tested in lane change scenarios
+- The MPC controller uses a **linearized prediction model**
+- Closed-loop validation can be performed with a **nonlinear Pacejka tire model**
+- The articulated truck-trailer system introduces additional coupling and stability challenges relevant to large-vehicle lane-change control
