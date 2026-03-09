@@ -495,6 +495,96 @@ As visible from the figures, the trailer makes lane changing significantly more 
 
 ---
 
+### Extended Kalman Filter (EKF)
+
+As an additional component, an Extended Kalman Filter (EKF) was integrated into the lane-change control framework to estimate the vehicle states in the presence of sensor noise.
+
+In this implementation, the vehicle dynamics were previously linearized around a nominal operating point in order to construct the MPC prediction model. Because the system model used in the estimator corresponds to this linearized representation of the nonlinear vehicle dynamics, the estimator effectively behaves as a standard Kalman Filter while still fitting within the EKF formulation commonly used for vehicle state estimation.
+
+The EKF estimates the full vehicle state vector
+
+\[
+x = [v_y,\; r,\; y,\; \psi]^T
+\]
+
+where:
+
+- \(v_y\) — lateral velocity  
+- \(r\) — yaw rate  
+- \(y\) — lateral position  
+- \(\psi\) — vehicle heading angle  
+
+In this simulation, only a subset of these states is assumed to be directly measurable. Specifically, lateral position \(y\) and heading angle \(\psi\) are treated as sensor measurements.
+
+To emulate realistic sensors, Gaussian noise is added to the true plant outputs:
+
+\[
+z_k =
+\begin{bmatrix}
+y_k \\
+\psi_k
+\end{bmatrix}
++
+\mathcal{N}(0, R)
+\]
+
+where \(R\) represents the measurement noise covariance. This produces noisy sensor readings similar to those obtained from GPS, vision systems, or inertial sensors in real autonomous vehicles.
+
+The EKF then combines these noisy measurements with the vehicle motion model to estimate the full system state, including quantities that are not directly measured such as lateral velocity \(v_y\) and yaw rate \(r\).
+
+---
+
+### EKF Prediction Step
+
+Using the control input from the MPC controller, the state is propagated forward using the discrete-time vehicle model:
+
+\[
+x_{k+1}^{-} = A_d x_k + B_d u_k
+\]
+
+The covariance matrix is propagated as
+
+\[
+P_{k+1}^{-} = A_d P_k A_d^T + Q
+\]
+
+where \(Q\) represents the process noise covariance.
+
+---
+
+### EKF Measurement Update
+
+When a new sensor measurement becomes available, the EKF computes the innovation
+
+\[
+y_k = z_k - H x_k^{-}
+\]
+
+and calculates the Kalman gain
+
+\[
+K_k = P_k^{-} H^T (H P_k^{-} H^T + R)^{-1}
+\]
+
+The state estimate is then corrected:
+
+\[
+x_k = x_k^{-} + K_k y_k
+\]
+
+and the covariance matrix is updated:
+
+\[
+P_k = (I - K_k H) P_k^{-}
+\]
+
+---
+
+By continuously combining the vehicle motion model with noisy sensor measurements, the EKF provides a filtered estimate of the vehicle states. This improves robustness to measurement noise and represents how real autonomous vehicle controllers rely on state estimation rather than perfect knowledge of the system state.
+
+![EKF AT LANNE change](images/EKF_Lane_Change.png)
+
+*Figure: Lane-change reference trajectory, MPC predicted trajectory, true plant output, noisy sensor measurements, and EKF state estimate.*
 ### 🔍 Notebooks
 
 - [Lane Change using MPC (Jupyter Notebook)](LaneChange.ipynb)
